@@ -1,0 +1,21 @@
+<head>
+    <meta charset="UTF-8">
+    <title>My Page</title>
+    {% load static %}
+    <script src="{% static 'todo/js/hide_message.js' %}">
+
+    </script>
+
+    {% if messages %}
+
+    <div id="message">
+        {% for message in messages %}
+
+        <div class="ui {{ message.tags }} message">
+            {{ message }}
+        </div>
+
+        {% endfor %}
+
+    </div>
+    {% endif %}

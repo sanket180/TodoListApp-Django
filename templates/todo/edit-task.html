@@ -1,0 +1,21 @@
+{% extends '_partials/base.html' %}
+{% load static %}
+
+{% block title %} Edit Task {% endblock %}
+
+
+{% block content %}
+
+<h2></h2>
+
+<form class="ui form" method="post" action={% url 'edit-task' todo.id %}>
+
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Save" class="ui button primary">
+
+</form>
+
+
+
+{% endblock content %}

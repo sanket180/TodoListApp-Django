@@ -1,0 +1,87 @@
+{% extends '_partials/base.html' %}
+
+{% load static %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<h1 class="ui header">Tasks List</h1>
+
+{% include '_partials/message.html' %}
+
+{% if todos %}
+
+<table class="ui table">
+    <thead>
+        <tr>
+
+            <th>Title</th>
+
+            <th>Description</th>
+
+            <th>Completed</th>
+
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for todo in todos %}
+
+        <tr>
+            <td>{{todo.title}}</td>
+            <td>{{todo.description}}</td>
+            <td>
+                {% if todo.is_completed %}
+                Yes <i class="check icon green"></i>
+                {% else %}
+                No
+                {% endif %}
+            </td>
+            <td>
+                <a href={% url 'todo' todo.pk %} class="ui button">
+                    <i class="eye icon"></i>
+                </a>
+
+                <a href={% url 'edit-task' todo.pk %} class="ui button">
+                    <i class="pencil icon"></i>
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+
+    <tfoot>
+        <tr>
+            <th>
+                <a href="?filter=all">All Tasks {{ total }}</a>
+            </th>
+            <th>
+                <a href="?filter=complete">Completed Tasks {{ completed_count }}</a>
+            </th>
+            <th>
+                <a href="?filter=incomplete">Remaining Tasks {{ incomplete_count }}</a>
+            </th>
+            <th></th>
+        </tr>
+    </tfoot>
+</table>
+
+{% else %}
+
+<div class="ui message">
+    <div class="header">
+        No Tasks Set.
+        <p>You can add the tasks now.
+            <a href={% url 'create-todo' %}> Add new </a>
+        </p>
+    </div>
+</div>
+
+
+
+{% endif %}
+
+{% endblock content %}
