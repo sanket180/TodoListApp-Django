@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.utils.cache import add_never_cache_headers
  
 
 @login_required
@@ -23,7 +24,9 @@ def index(request):
     incomplete = todos.filter(is_completed=False).count()
     all_count = todos.count()
     context={'todos':show_tasks(request,todos),'completed_count':completed,'incomplete_count':incomplete,'total':all_count}
-    return render(request,'todo/index.html',context)
+    response = render(request, 'todo/index.html', context) 
+    add_never_cache_headers(response) 
+    return response
 
 @login_required
 def create_todo(request):
