@@ -10,28 +10,62 @@
 
 {% include '_partials/message.html' %}
 
-{% if todos %}
+{% if total == 0 %}
+<div class="ui message">
+    <div class="header">
+        No Tasks Set.
+    </div>
+    <p>You can add tasks now by clicking <a href="{% url 'create-todo' %}">here</a>.</p>
+</div>
+{% else %}
 
-<table class="ui table">
+{% if request.GET.filter == 'complete' and completed_count == 0 %}
+<table class="ui celled table">
     <thead>
         <tr>
-
             <th>Title</th>
-
             <th>Description</th>
-
             <th>Completed</th>
-
             <th>Action</th>
         </tr>
     </thead>
     <tbody>
-
-        {% for todo in todos %}
-
         <tr>
-            <td>{{todo.title}}</td>
-            <td>{{todo.description}}</td>
+            <td colspan="4" class="center aligned">No Tasks Completed</td>
+        </tr>
+    </tbody>
+</table>
+{% elif request.GET.filter == 'incomplete' and incomplete_count == 0 %}
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Completed</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="4" class="center aligned">No Remaining Tasks</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<table class="ui celled table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Completed</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for todo in todos %}
+        <tr>
+            <td>{{ todo.title }}</td>
+            <td>{{ todo.description }}</td>
             <td>
                 {% if todo.is_completed %}
                 Yes <i class="check icon green"></i>
@@ -40,19 +74,19 @@
                 {% endif %}
             </td>
             <td>
-                <a href={% url 'todo' todo.pk %} class="ui button">
-                    <i class="eye icon"></i>
+                <a href="{% url 'todo' todo.pk %}" class="ui blue button">
+                    <i class="eye icon" style="margin-right: 0;"></i>
                 </a>
-
-                <a href={% url 'edit-task' todo.pk %} class="ui button">
-                    <i class="pencil icon"></i>
+                <a href="{% url 'edit-task' todo.pk %}" class="ui yellow button">
+                    <i class="pencil icon" style="margin-right: 0;"></i>
+                </a>
+                <a href="{% url 'delete-task' todo.id %}" class="ui red button">
+                    <i class="trash icon" style="margin-right: 0;"></i>
                 </a>
             </td>
         </tr>
         {% endfor %}
-
     </tbody>
-
     <tfoot>
         <tr>
             <th>
@@ -68,20 +102,7 @@
         </tr>
     </tfoot>
 </table>
-
-{% else %}
-
-<div class="ui message">
-    <div class="header">
-        No Tasks Set.
-        <p>You can add the tasks now.
-            <a href={% url 'create-todo' %}> Add new </a>
-        </p>
-    </div>
-</div>
-
-
-
+{% endif %}
 {% endif %}
 
 {% endblock content %}

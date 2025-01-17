@@ -55,20 +55,17 @@ def log_in(request):
         
         user = authenticate(request,username=username,password=password)
         
-        if not user.is_email_verified:
-            messages.add_message(request,messages.ERROR,"Please verify your mail. A verfication message has been mailed to you.")
-            return render(request,'authentication/login.html',context)
-        
-        if not user :
-            messages.add_message(request,messages.ERROR,"Invalid username or password")
-            return render(request,'authentication/login.html',context)
-        
-        login(request,user)
-        messages.add_message(request,messages.SUCCESS,f"Welcome {username} to Todo app")
-        return redirect('Home')
-        
-    response = render(request,'authentication/login.html')
-    add_never_cache_headers(response)
+        if user is not None: 
+            if not user.is_email_verified: 
+                messages.add_message(request, messages.ERROR, "Please verify your mail. A verification message has been mailed to you.") 
+                return render(request, 'authentication/login.html', context) 
+            login(request, user) 
+            messages.add_message(request, messages.SUCCESS, f"Welcome {username} to Todo app") 
+            return redirect('Home') 
+        else: messages.add_message(request, messages.ERROR, "Invalid username or password") 
+        return render(request, 'authentication/login.html', context) 
+    response = render(request, 'authentication/login.html') 
+    add_never_cache_headers(response) 
     return response
 
 @logged_in_user_no_access
@@ -101,7 +98,7 @@ def register(request):
             context['has_error'] = True
             
         if context['has_error']:
-            return render(request,'authentication/register.html',context)
+            return render(request,'authentication/register.html',context,status=409)
         
         user = User.objects.create_user(email=email,username=username)
         user.set_password(password)

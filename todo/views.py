@@ -30,7 +30,7 @@ def index(request):
 
 @login_required
 def create_todo(request):
-    form = TodoForm
+    form = TodoForm()
     context = {"form":form}
     
     if request.method == 'POST':
